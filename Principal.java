@@ -1,61 +1,65 @@
-import java.util.LinkedList;
-
-/**
- * Clase Principal que contiene el método principal main para probar la funcionalidad de la biblioteca.
- */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Principal {
-
-/**
- * Método principal main que crea una biblioteca, registra libros, busca un libro por título y muestra los libros disponibles.
- * @param args Argumentos de línea de comandos (no se utilizan en este caso).
- *
- * Complejidad temporal: O(N), donde N es el número de libros registrados en la biblioteca.
- */
-
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        List<Producto> productos = new ArrayList<>();
 
-        // Crear la biblioteca
-        Biblioteca bibliotecaKonradLorenz = new Biblioteca();
+        System.out.print("Ingrese la cantidad de productos: ");
+        int cantidadProductos = obtenerCodigoNice(scanner);
 
-        // Crear los 5 libros
-        Libro libro1 = new Libro("Cien años de soledad", "Gabriel García Márquez", 496);
-        Libro libro2 = new Libro("El código Da Vinci", "Dan Brown", 656);
-        Libro libro3 = new Libro("1984", "George Orwell", 326);
-        Libro libro4 = new Libro("El Hobbit", "J.R.R. Tolkien", 310);
-        Libro libro5 = new Libro("La Odisea", "Homero", 448);
+        for (int i = 0; i < cantidadProductos; i++) {
+            scanner.nextLine();
 
-        // Registrar los libros en la biblioteca
-        bibliotecaKonradLorenz.registrarLibro(libro1);
-        bibliotecaKonradLorenz.registrarLibro(libro2);
-        bibliotecaKonradLorenz.registrarLibro(libro3);
-        bibliotecaKonradLorenz.registrarLibro(libro4);
-        bibliotecaKonradLorenz.registrarLibro(libro5);
+            System.out.println("Producto #" + (i + 1));
+            System.out.print("Nombre del producto: ");
+            String nombre = scanner.nextLine();
 
-        // Buscar un libro por título
-        String tituloBuscado = "1984";
-        Libro libroEncontrado = bibliotecaKonradLorenz.buscarLibro(tituloBuscado);
-        if (libroEncontrado != null) {
-            System.out.println("------------------------");
-            System.out.println("Libro encontrado:");
-            System.out.println("Título: " + libroEncontrado.getTitulo());
-            System.out.println("Autor: " + libroEncontrado.getAutor());
-            System.out.println("Número de páginas: " + libroEncontrado.getNumeroPaginas());
-            System.out.println("------------------------");
-        } else {
-            System.out.println("------------------------");
-            System.out.println("Libro no encontrado.");
-            System.out.println("------------------------");
+            System.out.print("Precio del producto: ");
+            double precio = obtenerPrecioNice(scanner);
+
+            System.out.print("Código del producto: ");
+            int codigo = obtenerCodigoNice(scanner);
+
+            Producto producto = new Producto(nombre, precio, codigo);
+            productos.add(producto);
         }
 
-        // Mostrar todos los libros disponibles
-        LinkedList<Libro> librosDisponibles = bibliotecaKonradLorenz.mostrarLibrosDisponibles();
-        System.out.println("Libros disponibles en la biblioteca:");
-        for (Libro libro : librosDisponibles) {
-            System.out.println("Título: " + libro.getTitulo());
-            System.out.println("Autor: " + libro.getAutor());
-            System.out.println("Número de páginas: " + libro.getNumeroPaginas());
-            System.out.println("------------------------");
+        Tienda tienda = new Tienda(productos);
+        tienda.procesarCompra(scanner);
+    }
+
+    private static int obtenerCodigoNice(Scanner scanner) {
+        while (true) {
+            try {
+                int numero = scanner.nextInt();
+                if (numero > 0) {
+                    return numero;
+                } else {
+                    System.out.println("Por favor, ingrese un número entero positivo.");
+                }
+            } catch (Exception e) {
+                System.out.println("Por favor, ingrese un número entero positivo válido.");
+                scanner.nextLine();
+            }
+        }
+    }
+
+    private static double obtenerPrecioNice(Scanner scanner) {
+        while (true) {
+            try {
+                double numero = scanner.nextDouble();
+                if (numero >= 0) {
+                    return numero;
+                } else {
+                    System.out.println("Por favor, ingrese un número decimal no negativo.");
+                }
+            } catch (Exception e) {
+                System.out.println("Por favor, ingrese un número decimal válido.");
+                scanner.nextLine();
+            }
         }
     }
 }
